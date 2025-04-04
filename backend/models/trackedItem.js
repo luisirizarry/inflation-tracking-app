@@ -4,19 +4,25 @@ const db = require("../db");
 const { NotFoundError } = require("../expressError");
 
 /**
- * The TrackedItem class provides methods to interact with the tracked_items table in the database.
- * It includes functionality to retrieve all tracked items or a specific tracked item by its ID.
+ * TrackedItem Model
+ *
+ * This model handles queries related to the `tracked_items` table,
+ * which stores metadata for each item being monitored for inflation.
+ * Each tracked item includes a name, FRED series ID, and category association.
+ *
+ * Core Methods:
+ * - findAll(): Returns all tracked items, ordered alphabetically by name.
+ * - get(id): Returns a single tracked item by its primary ID.
+ *
+ * Used to power category filtering, API requests to FRED, and user-facing selection components.
  */
+
 class TrackedItem {
   static async findAll() {
     const allItems = await db.query(
-      `SELECT id,
-                    category_id,
-                    name,
-                    series_id,
-                    created_at
-             FROM tracked_items
-             ORDER BY name`
+      `SELECT id, category_id, name, series_id, created_at
+        FROM tracked_items
+        ORDER BY name`
     );
 
     return allItems.rows;
@@ -24,13 +30,9 @@ class TrackedItem {
 
   static async get(id) {
     const itemRes = await db.query(
-      `SELECT id,
-                    category_id,
-                    name,
-                    series_id,
-                    created_at
-             FROM tracked_items
-         WHERE id = $1`,
+      `SELECT id,category_id,name,series_id,created_at
+        FROM tracked_items
+        WHERE id = $1`,
       [id]
     );
 
