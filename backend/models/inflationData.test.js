@@ -9,22 +9,23 @@ const {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
-} = require("./_testCommon");
+  getTestItemIds, // ✅ use function to safely access test IDs
+} = require("./_testCommon.js");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-
 describe("findByItemId", function () {
   test("returns full data series for item", async function () {
-    const result = await InflationData.findByItemId(1);
+    const { testItemId1 } = getTestItemIds(); // ✅ safely get value
+    const result = await InflationData.findByItemId(testItemId1);
     expect(result.length).toBe(2);
     expect(result[0]).toEqual(
       expect.objectContaining({
-        tracked_item_id: 1,
-        date: expect.any(String),
+        tracked_item_id: testItemId1,
+        date: expect.any(Date),
         value: expect.any(Number),
       })
     );
@@ -42,8 +43,9 @@ describe("findByItemId", function () {
 
 describe("findByItemAndRange", function () {
   test("returns data in range", async function () {
+    const { testItemId1 } = getTestItemIds();
     const result = await InflationData.findByItemAndRange(
-      1,
+      testItemId1,
       "2023-01-01",
       "2023-01-31"
     );
@@ -52,8 +54,13 @@ describe("findByItemAndRange", function () {
   });
 
   test("throws NotFoundError if no data in range", async function () {
+    const { testItemId1 } = getTestItemIds();
     try {
-      await InflationData.findByItemAndRange(1, "2022-01-01", "2022-01-31");
+      await InflationData.findByItemAndRange(
+        testItemId1,
+        "2022-01-01",
+        "2022-01-31"
+      );
       fail();
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();
