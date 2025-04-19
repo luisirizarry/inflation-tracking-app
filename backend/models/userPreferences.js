@@ -4,6 +4,7 @@ const db = require("../db");
 const {
   NotFoundError,
   BadRequestError,
+  UnauthorizedError,
 } = require("../expressError");
 
 /**
@@ -24,18 +25,28 @@ const {
  * - findAll(userId): Returns all preferences for a user.
  * - updateNotify(userId, trackedItemId, notify): Updates the `notify` flag for a given preference.
  */
-
-
 class UserPreferences {
+  /** Add a new preference. Throws BadRequestError on duplicate. */
   static async add(userId, trackedItemId, notify = true) {
-    const result = await db.query(
-      `
-            INSERT INTO user_preferences (user_id, tracked_item_id, notify)
-            VALUES ($1, $2, $3)
-            RETURNING user_id, tracked_item_id, notify
-          `,
-      [userId, trackedItemId, notify]
-    );
+    let result;
+    try {
+      result = await db.query(
+        `
+          INSERT INTO user_preferences (user_id, tracked_item_id, notify)
+          VALUES ($1, $2, $3)
+          RETURNING user_id, tracked_item_id, notify
+        `,
+        [userId, trackedItemId, notify]
+      );
+    } catch (err) {
+      // 23505(duplicate entry)
+      if (err.code === "23505") {
+        throw new BadRequestError(
+          `Preference for user ${userId} and item ${trackedItemId} already exists.`
+        );
+      }
+      throw err;
+    }
 
     if (!result.rows[0]) {
       throw new BadRequestError("Preference not added");
@@ -44,13 +55,14 @@ class UserPreferences {
     return result.rows[0];
   }
 
+  /** Remove an existing preference. */
   static async remove(userId, trackedItemId) {
     const result = await db.query(
       `
-            DELETE FROM user_preferences
-            WHERE user_id = $1 AND tracked_item_id = $2
-            RETURNING user_id, tracked_item_id, notify
-          `,
+        DELETE FROM user_preferences
+        WHERE user_id = $1 AND tracked_item_id = $2
+        RETURNING user_id, tracked_item_id, notify
+      `,
       [userId, trackedItemId]
     );
 
@@ -64,24 +76,28 @@ class UserPreferences {
     return { deleted: { userId, trackedItemId } };
   }
 
+  /** Get a single preference. */
   static async get(userId, trackedItemId) {
     const result = await db.query(
       `
         SELECT user_id, tracked_item_id, notify
         FROM user_preferences
-        WHERE user_id = $1 AND tracked_item_id = $2`,
+        WHERE user_id = $1 AND tracked_item_id = $2
+      `,
       [userId, trackedItemId]
     );
 
-    if (!result.rows[0]) {
+    const pref = result.rows[0];
+    if (!pref) {
       throw new NotFoundError(
         `No preference found for user ${userId} and item ${trackedItemId}`
       );
     }
 
-    return result.rows[0];
+    return pref;
   }
 
+  /** List all preferences for a user. */
   static async findAll(userId) {
     const result = await db.query(
       `
@@ -91,10 +107,10 @@ class UserPreferences {
       `,
       [userId]
     );
-
     return result.rows;
   }
 
+  /** Update the notify flag on an existing preference. */
   static async updateNotify(userId, trackedItemId, notify) {
     const result = await db.query(
       `
