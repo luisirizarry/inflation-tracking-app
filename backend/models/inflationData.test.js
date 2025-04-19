@@ -9,7 +9,7 @@ const {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
-  getTestItemIds, // ✅ use function to safely access test IDs
+  getTestItemIds, 
 } = require("./_testCommon.js");
 
 beforeAll(commonBeforeAll);
@@ -19,7 +19,7 @@ afterAll(commonAfterAll);
 
 describe("findByItemId", function () {
   test("returns full data series for item", async function () {
-    const { testItemId1 } = getTestItemIds(); // ✅ safely get value
+    const { testItemId1 } = getTestItemIds(); 
     const result = await InflationData.findByItemId(testItemId1);
     expect(result.length).toBe(2);
     expect(result[0]).toEqual(
@@ -73,6 +73,6 @@ describe("getLatestForAll", function () {
     const result = await InflationData.getLatestForAll();
     expect(result.length).toBeGreaterThan(0);
     const itemIds = new Set(result.map((r) => r.tracked_item_id));
-    expect(itemIds.size).toBe(result.length); // should be unique per item
+    expect(itemIds.size).toBe(result.length); 
   });
 });
