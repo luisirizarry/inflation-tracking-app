@@ -3,34 +3,35 @@ const { createToken } = require("./tokens");
 const { SECRET_KEY } = require("../config");
 
 describe("createToken", function () {
-  test("works: not admin", function () {
-    const token = createToken({ username: "test", is_admin: false });
+  test("works with user id and email", function () {
+    const token = createToken({ id: 123, email: "test@example.com" });
     const payload = jwt.verify(token, SECRET_KEY);
     expect(payload).toEqual({
       iat: expect.any(Number),
-      username: "test",
-      isAdmin: false,
+      id: 123,
+      email: "test@example.com"
     });
   });
 
-  test("works: admin", function () {
-    const token = createToken({ username: "test", isAdmin: true });
+  test("works with additional properties that are ignored", function () {
+    const token = createToken({ 
+      id: 456, 
+      email: "other@example.com",
+      extraProperty: "should be ignored" 
+    });
+    
     const payload = jwt.verify(token, SECRET_KEY);
     expect(payload).toEqual({
       iat: expect.any(Number),
-      username: "test",
-      isAdmin: true,
+      id: 456,
+      email: "other@example.com"
     });
+    expect(payload.extraProperty).toBeUndefined();
   });
 
-  test("works: default no admin", function () {
-    // given the security risk if this didn't work, checking this specifically
-    const token = createToken({ username: "test" });
-    const payload = jwt.verify(token, SECRET_KEY);
-    expect(payload).toEqual({
-      iat: expect.any(Number),
-      username: "test",
-      isAdmin: false,
-    });
+  test("requires id and email", function () {
+    expect(() => createToken({ id: 789 })).toThrow();
+    expect(() => createToken({ email: "missing@example.com" })).toThrow();
+    expect(() => createToken({})).toThrow();
   });
 });

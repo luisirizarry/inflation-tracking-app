@@ -88,6 +88,33 @@ class User {
     return result.rows;
   }
 
+  /** Update user data.
+   *
+   * Returns { id, email }
+   * Throws NotFoundError if no such user.
+   */
+  static async update(id, data) {
+    if (!data || Object.keys(data).length === 0) {
+      throw new BadRequestError("No data to update");
+    }
+
+    // If we're allowing password updates, we would hash it here
+    // But this example only handles email updates
+    
+    const result = await db.query(
+      `UPDATE users
+       SET email = $1
+       WHERE id = $2
+       RETURNING id, email`,
+      [data.email, id]
+    );
+
+    const user = result.rows[0];
+    if (!user) throw new NotFoundError(`No user with ID: ${id}`);
+    
+    return user;
+  }
+
   /** Remove a user by ID. */
   static async remove(id) {
     const result = await db.query(

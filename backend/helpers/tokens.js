@@ -1,15 +1,19 @@
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
 
-/** return signed JWT from user data. */
+/** Return signed JWT from user data.
+ * 
+ * Expected user input: { id, email }
+ */
 
 function createToken(user) {
-  console.assert(user.isAdmin !== undefined,
-      "createToken passed user without isAdmin property");
-
+  if (!user.id || !user.email) {
+    throw new Error("createToken requires user id and email");
+  }
+  
   let payload = {
-    username: user.username,
-    isAdmin: user.isAdmin || false,
+    id: user.id,
+    email: user.email,
   };
 
   return jwt.sign(payload, SECRET_KEY);

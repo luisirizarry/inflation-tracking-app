@@ -52,26 +52,22 @@ router.post("/login", async function (req, res, next) {
   }
 });
 
-/** GET /users/:id => { user }
+/** GET /users/:userId => { user }
  *
  * Returns { id, email, created_at }
  * Authorization: must be the correct user
  */
-router.get("/:id", ensureCorrectUser, async function (req, res, next) {
+router.get("/:userId", ensureCorrectUser, async function (req, res, next) {
   try {
-    const user = await User.get(req.params.id);
+    const user = await User.get(req.params.userId);
     return res.json({ user });
   } catch (err) {
     return next(err);
   }
 });
 
-/** PATCH /users/:id => { updated user }
- *
- * Data can include: { email, password }
- * Authorization: must be the correct user
- */
-router.patch("/:id", ensureCorrectUser, async function (req, res, next) {
+/** PATCH /users/:userId => { updated user } */
+router.patch("/:userId", ensureCorrectUser, async function (req, res, next) {
   try {
     const validator = jsonschema.validate(req.body, userUpdateSchema);
     if (!validator.valid) {
@@ -79,21 +75,18 @@ router.patch("/:id", ensureCorrectUser, async function (req, res, next) {
       throw new BadRequestError(errs);
     }
 
-    const user = await User.update(req.params.id, req.body);
+    const user = await User.update(req.params.userId, req.body);
     return res.json({ user });
   } catch (err) {
     return next(err);
   }
 });
 
-/** DELETE /users/:id => { deleted: id }
- *
- * Authorization: must be the correct user
- */
-router.delete("/:id", ensureCorrectUser, async function (req, res, next) {
+/** DELETE /users/:userId => { deleted: userId } */
+router.delete("/:userId", ensureCorrectUser, async function (req, res, next) {
   try {
-    await User.remove(req.params.id);
-    return res.json({ deleted: req.params.id });
+    await User.remove(req.params.userId);
+    return res.json({ deleted: req.params.userId });
   } catch (err) {
     return next(err);
   }
