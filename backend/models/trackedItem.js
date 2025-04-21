@@ -1,7 +1,7 @@
 "use strict";
 
 const db = require("../db");
-const { NotFoundError } = require("../expressError");
+const { NotFoundError, BadRequestError } = require("../expressError");
 
 /**
  * TrackedItem Model
@@ -29,6 +29,10 @@ class TrackedItem {
   }
 
   static async get(id) {
+    if (isNaN(parseInt(id))) {
+      throw new BadRequestError("Item ID must be a number");
+    }
+
     const itemRes = await db.query(
       `SELECT id,category_id,name,series_id,created_at
         FROM tracked_items
