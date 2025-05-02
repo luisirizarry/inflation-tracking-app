@@ -9,7 +9,7 @@ import UserPreferences from "../pages/user/UserPreferences";
 import Notifications from "../pages/notifications/Notifications";
 import PrivateRoute from "./PrivateRoute";
 
-function Routes({ login, signup }) {
+function AppRoutes({ login, signup }) {
   return (
     <Routes>
       {/* Public Routes */}
@@ -31,4 +31,4 @@ function Routes({ login, signup }) {
   );
 }
 
-export default Routes;
+export default AppRoutes;
