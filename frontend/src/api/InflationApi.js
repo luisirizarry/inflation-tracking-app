@@ -9,8 +9,15 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
  */
 
 class InflationApi {
-  // Token for API requests
   static token = null;
+
+  static setToken(token) {
+    this.token = token;
+  }
+
+  static clearToken() {
+    this.token = null;
+  }
 
   static async request(endpoint, data = {}, method = "get") {
     console.debug("API Call:", endpoint, data, method);
@@ -32,11 +39,18 @@ class InflationApi {
   // Authentication
 
   static async login(data) {
-    return (await this.request(`auth/login`, data, "post")).token;
+    return (await this.request(`auth/token`, data, "post")).token;
   }
 
   static async signup(data) {
-    return (await this.request(`auth/register`, data, "post")).token;
+    try {
+      const result = await this.request(`auth/register`, data, "post");
+      console.log("API signup response:", result);
+      return result.token;
+    } catch (error) {
+      console.error("API signup error:", error);
+      throw error;
+    }
   }
 
   static async getUser(userId) {
@@ -53,6 +67,12 @@ class InflationApi {
     return (await this.request(`categories/${id}`)).category;
   }
 
+  static async getItemsByCategory(categoryId) {
+    const result = await this.request(`categories/${categoryId}/items`);
+    console.log("API raw response:", result); 
+    return result;
+  }
+
   // Tracked Items
 
   static async getItems() {
@@ -61,6 +81,11 @@ class InflationApi {
 
   static async getItem(id) {
     return (await this.request(`items/${id}`)).trackedItem;
+  }
+
+  // NEW: Get item by FRED series ID
+  static async getItemBySeriesId(seriesId) {
+    return (await this.request(`items/series/${seriesId}`)).trackedItem;
   }
 
   // Inflation Data

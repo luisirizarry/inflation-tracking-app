@@ -25,10 +25,10 @@ export function AuthProvider({ children }) {
       try {
         // Set token globally for API calls
         InflationApi.setToken(token);
-        
+
         // Decode token to get user ID
         const decoded = jwtDecode(token);
-        
+
         // Check if token is expired
         const currentTime = Date.now() / 1000;
         if (decoded.exp < currentTime) {
@@ -36,13 +36,13 @@ export function AuthProvider({ children }) {
           handleLogout();
           return;
         }
-        
+
         setCurrentUser(decoded);
       } catch (err) {
         console.error("Error loading user from token:", err);
         handleLogout();
       }
-      
+
       setLoading(false);
     }
 
@@ -53,7 +53,7 @@ export function AuthProvider({ children }) {
     try {
       const response = await InflationApi.login({ email, password });
       const { token } = response;
-      
+
       setToken(token);
       return true;
     } catch (err) {
@@ -62,15 +62,18 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const signup = async (email, password) => {
+  const signup = async (userData) => {
     try {
-      const response = await InflationApi.signup({ email, password });
-      const { token } = response;
-      
-      setToken(token);
+      console.log("AuthContext receiving signup data:", userData);
+      console.log("Data structure:", JSON.stringify(userData));
+
+      const response = await InflationApi.signup(userData);
+      console.log("Signup API response:", response);
+
+      setToken(response);
       return true;
     } catch (err) {
-      console.error("Signup failed:", err);
+      console.error("Signup error in AuthContext:", err);
       return false;
     }
   };
@@ -87,7 +90,7 @@ export function AuthProvider({ children }) {
     login,
     signup,
     logout: handleLogout,
-    loading
+    loading,
   };
 
   return (

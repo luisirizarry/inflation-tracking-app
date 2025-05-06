@@ -33,3 +33,11 @@
 .form-footer a {
   color: #4a90e2;
 }
+
+.login-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 2rem;
+}

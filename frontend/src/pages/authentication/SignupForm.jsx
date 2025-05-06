@@ -1,7 +1,7 @@
-import { useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import AuthContext from '../../context/AuthContext';
-import './SignupForm.css';
+import { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import AuthContext from "../../context/AuthContext";
+import "./SignupForm.css";
 
 function SignupForm() {
   const { signup } = useContext(AuthContext);
@@ -11,55 +11,73 @@ function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    passwordConfirm: ''
+    email: "",
+    password: "",
+    passwordConfirm: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(data => ({
+    setFormData((data) => ({
       ...data,
-      [name]: value
+      [name]: value,
     }));
   };
 
-    //Incase form has errors
   const validateForm = () => {
     const newErrors = [];
-    
+
     if (formData.password !== formData.passwordConfirm) {
       newErrors.push("Passwords don't match");
     }
-    
+
     if (formData.password.length < 6) {
       newErrors.push("Password must be at least 6 characters");
     }
-    
+
     setErrors(newErrors);
     return newErrors.length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setIsLoading(true);
 
     try {
       // Only pass email and password to signup, not the confirmation
       const { passwordConfirm, ...signupData } = formData;
-      
-      const result = await signup(signupData);
-      if (result.success) {
+
+      // DEBUG: Log what we're sending to the signup function
+      console.log("Form data:", formData);
+      console.log("Signup data being sent to AuthContext:", signupData);
+      console.log("Signup data type:", typeof signupData);
+      console.log("Email type:", typeof signupData.email);
+      console.log("Password type:", typeof signupData.password);
+
+      // Try with explicit object construction instead of rest syntax
+      const explicitData = {
+        email: formData.email,
+        password: formData.password,
+      };
+      console.log("Alternative explicit data:", explicitData);
+
+      // Try using the explicit object instead
+      const result = await signup(explicitData);
+
+      if (result) {
         // Redirect to dashboard upon successful signup
-        navigate('/');
+        navigate("/");
       } else {
-        setErrors(result.errors || ['Signup failed']);
+        setErrors(["Signup failed"]);
       }
     } catch (err) {
-      setErrors(err);
+      console.error("Signup error:", err);
+      setErrors(
+        Array.isArray(err) ? err : [err.message || "An error occurred"]
+      );
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +95,7 @@ function SignupForm() {
               ))}
             </div>
           )}
-          
+
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -91,7 +109,7 @@ function SignupForm() {
               className="form-control"
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
@@ -105,7 +123,7 @@ function SignupForm() {
               className="form-control"
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="passwordConfirm">Confirm Password</label>
             <input
@@ -119,11 +137,11 @@ function SignupForm() {
               className="form-control"
             />
           </div>
-          
+
           <div className="form-group">
-            <button 
-              type="submit" 
-              className="btn btn-primary" 
+            <button
+              type="submit"
+              className="btn btn-primary"
               disabled={isLoading}
             >
               {isLoading ? "Signing up..." : "Sign Up"}

@@ -39,4 +39,23 @@ router.get("/:id", async function (req, res, next) {
   }
 });
 
+// In your items.js routes file
+router.get("/series/:seriesId", async (req, res, next) => {
+  try {
+    const item = await TrackedItem.findBySeriesId(req.params.seriesId);
+    return res.json({ trackedItem: item });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+router.get("/category/:categoryId", async (req, res, next) => {
+  try {
+    const items = await TrackedItem.findByCategory(req.params.categoryId);
+    return res.json({ trackedItems: items });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 module.exports = router;

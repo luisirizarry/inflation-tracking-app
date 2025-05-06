@@ -46,6 +46,39 @@ class TrackedItem {
 
     return item;
   }
+
+  // Add to TrackedItem class
+  static async findByCategory(categoryId) {
+    if (isNaN(parseInt(categoryId))) {
+      throw new BadRequestError("Category ID must be a number");
+    }
+
+    const itemsRes = await db.query(
+      `SELECT id, category_id, name, series_id, created_at
+     FROM tracked_items
+     WHERE category_id = $1
+     ORDER BY name`,
+      [categoryId]
+    );
+
+    return itemsRes.rows;
+  }
+
+  // Add to TrackedItem class
+  static async findBySeriesId(seriesId) {
+    const itemRes = await db.query(
+      `SELECT id, category_id, name, series_id, created_at
+     FROM tracked_items
+     WHERE series_id = $1`,
+      [seriesId]
+    );
+
+    const item = itemRes.rows[0];
+
+    if (!item) throw new NotFoundError(`No item with series ID: ${seriesId}`);
+
+    return item;
+  }
 }
 
 module.exports = TrackedItem;

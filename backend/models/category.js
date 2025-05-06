@@ -78,6 +78,7 @@ class Category {
       items,
     };
   }
+  
 }
 
 module.exports = Category;
