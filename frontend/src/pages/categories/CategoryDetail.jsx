@@ -129,25 +129,74 @@ function CategoryDetail() {
   const handleTrackItem = async (itemId) => {
     if (!currentUser) return;
 
+    console.log("Track/untrack clicked for item:", itemId);
+    console.log("Current preferences:", userPreferences);
+    console.log("Is item currently tracked?", userPreferences.includes(itemId));
+
     try {
       if (userPreferences.includes(itemId)) {
         // Untrack item
-        await InflationApi.removePreference(currentUser.id, itemId);
+        console.log("Attempting to untrack item:", itemId);
+        const result = await InflationApi.removePreference(
+          currentUser.id,
+          itemId
+        );
+        console.log("Untrack result:", result);
         setUserPreferences(userPreferences.filter((id) => id !== itemId));
       } else {
         // Track item
-        await InflationApi.addPreference(currentUser.id, itemId);
+        console.log("Attempting to track item:", itemId);
+        const result = await InflationApi.addPreference(currentUser.id, itemId);
+        console.log("Track result:", result);
         setUserPreferences([...userPreferences, itemId]);
       }
+      console.log(
+        "Updated preferences:",
+        userPreferences.includes(itemId)
+          ? userPreferences.filter((id) => id !== itemId)
+          : [...userPreferences, itemId]
+      );
     } catch (err) {
       console.error("Error updating tracking preference:", err);
     }
   };
 
   useEffect(() => {
-    console.log("🌟 chartData object:", chartData);
-    console.log("🌟 chartData.items array:", chartData.items);
-  }, [chartData]);
+    const loadUserPreferences = async () => {
+      console.log("Loading user preferences...");
+      if (!currentUser) {
+        console.log("No current user, clearing preferences");
+        setUserPreferences([]);
+        return;
+      }
+
+      try {
+        console.log("Fetching preferences for user:", currentUser.id);
+        const preferences = await InflationApi.getUserPreferences(
+          currentUser.id
+        );
+        console.log("API returned preferences:", preferences);
+        console.log(
+          "Preferences type:",
+          typeof preferences,
+          Array.isArray(preferences)
+        );
+
+        const preferenceIds = Array.isArray(preferences)
+          ? preferences.map((pref) => pref.tracked_item_id)
+          : preferences && Array.isArray(preferences.items)
+          ? preferences.items.map((item) => item.id)
+          : [];
+
+        console.log("Processed preference IDs:", preferenceIds);
+        setUserPreferences(preferenceIds);
+      } catch (err) {
+        console.error("Error loading user preferences:", err);
+      }
+    };
+
+    loadUserPreferences();
+  }, [currentUser]);
 
   if (loading) return <LoadingSpinner />;
   if (error) return <div className="error-message">{error}</div>;
