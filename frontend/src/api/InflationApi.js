@@ -39,7 +39,12 @@ class InflationApi {
   // Authentication
 
   static async login(data) {
-    return (await this.request(`auth/token`, data, "post")).token;
+    try {
+      return (await this.request(`auth/token`, data, "post")).token;
+    } catch (error) {
+      console.error("API login error:", error);
+      throw error;
+    }
   }
 
   static async signup(data) {

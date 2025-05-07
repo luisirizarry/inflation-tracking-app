@@ -31,13 +31,12 @@ function LoginForm() {
     try {
       const result = await login(formData);
       if (result.success) {
-        // Redirect to dashboard upon successful login
         navigate("/");
       } else {
         setErrors(result.errors || ["Login failed"]);
       }
     } catch (err) {
-      setErrors(err);
+      setErrors([err.toString()]);
     } finally {
       setIsLoading(false);
     }

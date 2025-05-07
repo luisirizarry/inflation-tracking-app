@@ -49,16 +49,18 @@ export function AuthProvider({ children }) {
     getUser();
   }, [token]);
 
-  const login = async (email, password) => {
+  const login = async (formData) => {
     try {
-      const response = await InflationApi.login({ email, password });
-      const { token } = response;
+      const token = await InflationApi.login(formData);
 
       setToken(token);
-      return true;
+      return { success: true };
     } catch (err) {
       console.error("Login failed:", err);
-      return false;
+      return {
+        success: false,
+        errors: Array.isArray(err) ? err : [err.toString()],
+      };
     }
   };
 
