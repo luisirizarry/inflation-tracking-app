@@ -27,7 +27,7 @@ function Dashboard() {
       try {
         setLoading(true);
 
-        // Fetch data (implementation unchanged)
+        // Fetch data 
         const inflationData = await InflationApi.getLatestInflationData();
         setLatestData(inflationData);
 
@@ -37,7 +37,7 @@ function Dashboard() {
         calculateSummaryStats(inflationData, categoriesData);
 
         if (currentUser) {
-          // Fetch user preferences and items (implementation unchanged)
+          // Fetch user preferences and items 
           const preferences = await InflationApi.getUserPreferences(
             currentUser.id
           );
@@ -67,8 +67,6 @@ function Dashboard() {
 
   const calculateSummaryStats = (inflationData, categories) => {
     try {
-      // Let's use a different approach to match items to categories
-      // We need an additional API call to get item-to-category mappings
       const categoryInflationMap = {};
 
       // Initialize categories we have
@@ -80,7 +78,6 @@ function Dashboard() {
       });
 
       inflationData.forEach((item, index) => {
-        // Assign each item to a category based on its index for temporary display
         const categoryIndex = index % categories.length;
         const categoryId = categories[categoryIndex].id;
 
@@ -98,7 +95,6 @@ function Dashboard() {
             cat.values.reduce((sum, val) => sum + val, 0) / cat.values.length,
         }));
 
-      // Skip calculations if no valid data
       if (categoryAverages.length === 0) {
         console.warn("No valid category data to calculate summary stats");
         return;
@@ -133,7 +129,6 @@ function Dashboard() {
     }
   };
 
-  // Add this function in your Dashboard component
   const prepareCategoryBarData = (inflationData, categories) => {
     // Group inflation data by categories
     const categoryAverages = {};
@@ -146,7 +141,6 @@ function Dashboard() {
       };
     });
 
-    // Assign data to categories (using the same temp method as calculateSummaryStats)
     inflationData.forEach((item, index) => {
       const categoryIndex = index % categories.length;
       const categoryId = categories[categoryIndex].id;
@@ -163,7 +157,7 @@ function Dashboard() {
       .map((cat, index) => ({
         name: cat.name,
         value: (cat.total / cat.count).toFixed(2),
-        color: getBarColor(index), // Use the same getBarColor function you had in CategoryDetail
+        color: getBarColor(index),
       }))
       .sort((a, b) => parseFloat(b.value) - parseFloat(a.value)); // Sort by value
 

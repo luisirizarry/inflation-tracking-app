@@ -30,14 +30,14 @@ function ItemDetail() {
   const [error, setError] = useState(null);
   const [dateRangeError, setDateRangeError] = useState(null);
   
-  // Date range state (default to last 12 months)
+  // Date range state
   const [startDate, setStartDate] = useState(() => {
     const date = new Date();
-    date.setFullYear(date.getFullYear() - 1); // 1 year ago
+    date.setFullYear(date.getFullYear() - 1); 
     return date.toISOString().split('T')[0];
   });
   const [endDate, setEndDate] = useState(() => {
-    return new Date().toISOString().split('T')[0]; // Today
+    return new Date().toISOString().split('T')[0]; 
   });
   
   // Statistics
@@ -146,7 +146,6 @@ function ItemDetail() {
       return;
     }
     
-    // Check for too large date range (optional limit)
     const diffYears = (end - start) / (1000 * 60 * 60 * 24 * 365);
     if (diffYears > 10) {
       setDateRangeError("Please select a date range of 10 years or less.");

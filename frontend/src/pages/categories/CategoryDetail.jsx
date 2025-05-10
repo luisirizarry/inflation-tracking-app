@@ -34,7 +34,6 @@ function CategoryDetail() {
 
         // Fetch category data
         const result = await InflationApi.getItemsByCategory(id);
-        console.log("API response:", result); // Debug log
 
         // Check if we received the expected structure
         if (!result || !result.categoryWithItems) {
@@ -72,8 +71,6 @@ function CategoryDetail() {
             };
           });
 
-        console.log("Enhanced data with names:", filteredCategoryData);
-
         // Format chart data
         const processedData = processChartData(filteredCategoryData);
         setChartData(processedData);
@@ -89,7 +86,7 @@ function CategoryDetail() {
   }, [id, currentUser]);
 
   const processChartData = (data) => {
-    // Get a common month from the data (assuming all entries have same date)
+    // Get a common month from the data
     const monthYearStr =
       data.length > 0
         ? new Date(data[0].date).toLocaleDateString(undefined, {
@@ -129,33 +126,19 @@ function CategoryDetail() {
   const handleTrackItem = async (itemId) => {
     if (!currentUser) return;
 
-    console.log("Track/untrack clicked for item:", itemId);
-    console.log("Current preferences:", userPreferences);
-    console.log("Is item currently tracked?", userPreferences.includes(itemId));
-
     try {
       if (userPreferences.includes(itemId)) {
         // Untrack item
-        console.log("Attempting to untrack item:", itemId);
         const result = await InflationApi.removePreference(
           currentUser.id,
           itemId
         );
-        console.log("Untrack result:", result);
         setUserPreferences(userPreferences.filter((id) => id !== itemId));
       } else {
         // Track item
-        console.log("Attempting to track item:", itemId);
         const result = await InflationApi.addPreference(currentUser.id, itemId);
-        console.log("Track result:", result);
         setUserPreferences([...userPreferences, itemId]);
       }
-      console.log(
-        "Updated preferences:",
-        userPreferences.includes(itemId)
-          ? userPreferences.filter((id) => id !== itemId)
-          : [...userPreferences, itemId]
-      );
     } catch (err) {
       console.error("Error updating tracking preference:", err);
     }
@@ -163,23 +146,14 @@ function CategoryDetail() {
 
   useEffect(() => {
     const loadUserPreferences = async () => {
-      console.log("Loading user preferences...");
       if (!currentUser) {
-        console.log("No current user, clearing preferences");
         setUserPreferences([]);
         return;
       }
 
       try {
-        console.log("Fetching preferences for user:", currentUser.id);
         const preferences = await InflationApi.getUserPreferences(
           currentUser.id
-        );
-        console.log("API returned preferences:", preferences);
-        console.log(
-          "Preferences type:",
-          typeof preferences,
-          Array.isArray(preferences)
         );
 
         const preferenceIds = Array.isArray(preferences)
@@ -188,7 +162,6 @@ function CategoryDetail() {
           ? preferences.items.map((item) => item.id)
           : [];
 
-        console.log("Processed preference IDs:", preferenceIds);
         setUserPreferences(preferenceIds);
       } catch (err) {
         console.error("Error loading user preferences:", err);
@@ -219,7 +192,6 @@ function CategoryDetail() {
               margin={{ top: 5, right: 30, left: 20, bottom: 30 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              {/* hide default ticks */}
               <XAxis axisLine={false} tick={false} />
               <YAxis
                 label={{

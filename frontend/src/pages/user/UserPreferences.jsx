@@ -62,7 +62,6 @@ function UserPreferences() {
               pref.tracked_item_id
             );
 
-            // Optimized data storage - only keep what we need
             details[pref.tracked_item_id] = {
               id: itemData.id,
               name: itemData.name,
@@ -101,7 +100,6 @@ function UserPreferences() {
         trackedItems.filter((item) => item.tracked_item_id !== itemId)
       );
 
-      // Also remove from details
       const newDetails = { ...itemDetails };
       delete newDetails[itemId];
       setItemDetails(newDetails);

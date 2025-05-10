@@ -50,21 +50,11 @@ function SignupForm() {
       // Only pass email and password to signup, not the confirmation
       const { passwordConfirm, ...signupData } = formData;
 
-      // DEBUG: Log what we're sending to the signup function
-      console.log("Form data:", formData);
-      console.log("Signup data being sent to AuthContext:", signupData);
-      console.log("Signup data type:", typeof signupData);
-      console.log("Email type:", typeof signupData.email);
-      console.log("Password type:", typeof signupData.password);
-
-      // Try with explicit object construction instead of rest syntax
       const explicitData = {
         email: formData.email,
         password: formData.password,
       };
-      console.log("Alternative explicit data:", explicitData);
 
-      // Try using the explicit object instead
       const result = await signup(explicitData);
 
       if (result) {
