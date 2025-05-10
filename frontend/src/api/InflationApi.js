@@ -50,7 +50,6 @@ class InflationApi {
   static async signup(data) {
     try {
       const result = await this.request(`auth/register`, data, "post");
-      console.log("API signup response:", result);
       return result.token;
     } catch (error) {
       console.error("API signup error:", error);
@@ -74,7 +73,6 @@ class InflationApi {
 
   static async getItemsByCategory(categoryId) {
     const result = await this.request(`categories/${categoryId}/items`);
-    console.log("API raw response:", result); 
     return result;
   }
 

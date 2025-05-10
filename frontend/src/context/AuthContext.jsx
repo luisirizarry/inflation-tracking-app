@@ -32,7 +32,6 @@ export function AuthProvider({ children }) {
         // Check if token is expired
         const currentTime = Date.now() / 1000;
         if (decoded.exp < currentTime) {
-          // Token expired
           handleLogout();
           return;
         }
@@ -66,11 +65,7 @@ export function AuthProvider({ children }) {
 
   const signup = async (userData) => {
     try {
-      console.log("AuthContext receiving signup data:", userData);
-      console.log("Data structure:", JSON.stringify(userData));
-
       const response = await InflationApi.signup(userData);
-      console.log("Signup API response:", response);
 
       setToken(response);
       return true;
