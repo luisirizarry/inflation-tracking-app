@@ -1,43 +1,118 @@
+/* Container */
+.login-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+  min-height: 75vh;
+  background: transparent;
+  font-family: sans-serif;
+  color: #333;
+}
+
+/* Card */
 .login-card {
+  background: #fff;
+  padding: 2rem;
   width: 100%;
   max-width: 400px;
-  padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background-color: white;
-  color: #333; 
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-card h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+}
+
+/* Alert */
+.alert {
+  background: #ffe6e6;
+  color: #a00;
+  border: 1px solid #f5c2c2;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.alert-danger div + div {
+  margin-top: 0.5rem;
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 1rem;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #333;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  color: white;
 }
 
 .form-control {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 1rem;
-  color: #333; 
+  transition: border-color 0.2s ease;
 }
 
-.form-footer {
-  margin-top: 1.5rem;
+.form-control:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+
+
+/* Button */
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border-radius: 4px;
   text-align: center;
-  color: #333; 
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border: none;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: #fff;
+}
+
+.btn-primary:disabled {
+  background: #7abaff;
+  cursor: not-allowed;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+/* Footer */
+.form-footer {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0 nine rem;
 }
 
 .form-footer a {
-  color: #4a90e2;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
 }
 
-.login-form-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-  padding: 2rem;
+.form-footer a:hover {
+  text-decoration: underline;
 }

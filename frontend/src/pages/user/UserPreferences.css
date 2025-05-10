@@ -1,5 +1,3 @@
-/* UserPreferences.css */
-
 /* Container */
 .user-preferences {
   max-width: 900px;
@@ -14,6 +12,7 @@
   font-size: 2rem;
   margin-bottom: 1rem;
   text-align: center;
+  color: white;
 }
 
 .user-preferences h2 {

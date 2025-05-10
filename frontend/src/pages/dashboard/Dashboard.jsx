@@ -4,8 +4,6 @@ import AuthContext from "../../context/AuthContext";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import SummaryStats from "./SummaryStats";
 import InflationBarChart from "../../components/charts/InflationBarChart";
-import CategoryBarChart from "../../components/charts/CategoryBarChart";
-import DistributionPieChart from "../../components/charts/DistributionPieChart";
 import UserTrackedItems from "./UserTrackedItems";
 import CategoryQuickAccess from "./CategoryQuickAccess";
 import SectionHeader from "../../components/common/SectionHeader";

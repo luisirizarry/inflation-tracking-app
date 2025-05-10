@@ -39,6 +39,7 @@
   border-radius: 4px;
   font-size: 1rem;
   background-color: white;
+  color: #000;
 }
 
 .search-input:focus {
@@ -61,6 +62,7 @@
   cursor: pointer;
   font-size: 0.9rem;
   transition: background-color 0.2s;
+  color: #4a90e2;
 }
 
 .toggle-btn.active {

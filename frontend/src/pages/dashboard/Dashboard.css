@@ -12,7 +12,7 @@
 .summary-section h1 {
   font-size: 2.5rem;
   margin-bottom: 2rem;
-  color: #333;
+  color: #ffffff;
 }
 
 .summary-cards {
@@ -238,6 +238,7 @@
 
   .summary-section h1 {
     font-size: 2rem;
+    color: white;
   }
 
   .section-header {
