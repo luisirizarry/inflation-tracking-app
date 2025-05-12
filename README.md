@@ -156,3 +156,6 @@ Discover recipes, save favorites, plan weekly meals, and auto-generate shopping 
 ---
 
 Repository: [github.com/luisirizarry/Capstone-Project](https://github.com/luisirizarry/Capstone-Project)
+
+### Deployed Site URL
+(https://inflation-tracking-app-frontend.onrender.com/)
