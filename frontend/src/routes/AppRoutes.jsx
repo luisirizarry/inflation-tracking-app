@@ -23,7 +23,7 @@ function AppRoutes({ login, signup }) {
         <Route path="/categories/:id" element={<CategoryDetail />} />
         <Route path="/items/:id" element={<ItemDetail />} />
         <Route path="/preferences" element={<UserPreferences />} />
-        <Route path="/notifications" element={<Notifications />} />
+        {/* <Route path="/notifications" element={<Notifications />} /> */}
       </Route>
 
       <Route path="*" element={<Navigate to="/" />} />
