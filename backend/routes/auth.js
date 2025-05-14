@@ -11,6 +11,8 @@ const userAuthSchema = require("../schemas/authLogin.json");
 const userRegisterSchema = require("../schemas/userRegister.json");
 const { BadRequestError } = require("../expressError");
 
+const { loginLimiter } = require("../middleware/auth");
+
 const router = new express.Router();
 
 /** POST /auth/token:  { email, password } => { token }
@@ -18,11 +20,14 @@ const router = new express.Router();
  * Returns JWT token which can be used to authenticate further requests.
  * Authorization required: none
  */
-router.post("/token", async function (req, res, next) {
+router.post("/token", loginLimiter, async function (req, res, next) {
   try {
     const validator = jsonschema.validate(req.body, userAuthSchema);
     if (!validator.valid) {
-      const errs = validator.errors.map((e) => e.stack);
+      const errs = validator.errors.map(e => {
+        const field = e.property.replace(/^instance\./, "");
+        return `${field} ${e.message}`;
+      });
       throw new BadRequestError(errs);
     }
 

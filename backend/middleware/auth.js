@@ -3,6 +3,7 @@
 /** Convenience middleware to handle common auth cases in routes. */
 
 const jwt = require("jsonwebtoken");
+const rateLimit = require("express-rate-limit");
 const { SECRET_KEY } = require("../config");
 const { UnauthorizedError } = require("../expressError");
 
@@ -13,6 +14,17 @@ const { UnauthorizedError } = require("../expressError");
  *
  * It's not an error if no token was provided or if the token is not valid.
  */
+
+/** Rate-limit login attempts: max 5 per 15 minutes per IP */
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,   // 15 minutes
+  max: 5,                     // limit each IP to 5 requests
+  message: { 
+    error: "Too many login attempts, please try again after 15 minutes" 
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 function authenticateJWT(req, res, next) {
   try {
@@ -95,4 +107,5 @@ module.exports = {
   ensureAdmin,
   ensureCorrectUserOrAdmin,
   ensureCorrectUser,
+  loginLimiter
 };
