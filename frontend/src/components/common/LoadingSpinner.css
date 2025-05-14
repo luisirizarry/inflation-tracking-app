@@ -13,10 +13,6 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
-.loading-spinner {
-  outline: 2px solid red;   
-  background: rgba(0,0,0,0.1);
-}
 
 
 @keyframes spin {
